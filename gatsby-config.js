@@ -1,9 +1,8 @@
 module.exports = {
   siteMetadata: {
     title: `SkillSafari`,
-    subtitle: `Data fetched from a site hosted on wordpress.com`,
-    description: "Quality education and learning",
-    baseUrl: "https://skillsafari.io/"
+    subtitle: `for better education`,
+    description: "Quality education and learning"
   },
   plugins: [
     // https://public-api.wordpress.com/wp/v2/sites/gatsbyjsexamplewordpress.wordpress.com/pages/

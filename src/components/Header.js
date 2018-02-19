@@ -11,7 +11,7 @@ const Header = (props) => (
                 <h1>{props.siteMetadata.title}</h1>
                 {
                     props.allWordpressPage.edges.map(({ node }, i) => (
-                        (node.link === props.siteMetadata.baseUrl) ?
+                        (node.wordpress_parent === 0) ?
                             <div key={node.id} dangerouslySetInnerHTML={{ __html: node.content }} /> : 
                             null
                     ))
@@ -22,7 +22,7 @@ const Header = (props) => (
             <ul>
                 {
                     props.allWordpressPage.edges.map(({ node }, i) => (
-                        (node.link !== props.siteMetadata.baseUrl) ?
+                        (node.wordpress_parent !== 0) ?
                             <li key={node.id}><a href="javascript:;" onClick={() => {props.onOpenArticle(node.slug)}}>{node.slug}</a></li> : 
                             null
                     ))

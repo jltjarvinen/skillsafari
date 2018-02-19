@@ -113,7 +113,6 @@ class DefaultLayout extends React.Component {
             onCloseArticle={this.handleCloseArticle}
             pageChildren={this.props.children}
             allWordpressPage={this.props.data.allWordpressPage}
-            siteMetadata={this.props.data.site.siteMetadata}
           />
           <Footer timeout={this.state.timeout} />
 
@@ -132,7 +131,6 @@ export const pageQuery = graphql`
       siteMetadata {
         title
         description
-        baseUrl
       }
     },
     allWordpressPage {
@@ -143,6 +141,7 @@ export const pageQuery = graphql`
           content
           slug
           link
+          wordpress_parent
           date(formatString: "MMMM DD, YYYY")
         }
       }
