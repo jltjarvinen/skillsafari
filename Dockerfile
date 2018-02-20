@@ -9,6 +9,7 @@ WORKDIR /usr/src/app
 ADD gatsby-config.js /usr/src/app/gatsby-config.js
 ADD gatsby-node.js /usr/src/app/gatsby-node.js
 ADD package.json /usr/src/app/package.json
+ADD package-lock.json /usr/src/app/package-lock.json
 ADD src /usr/src/app/src
 
 # install required software
