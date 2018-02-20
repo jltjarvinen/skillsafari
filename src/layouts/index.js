@@ -6,6 +6,12 @@ import Header from '../components/Header'
 import Main from '../components/Main'
 import Footer from '../components/Footer'
 
+const refreshToMain = () => {
+  if (typeof window !== 'undefined') {
+    window.location.href = '/';
+  }
+}
+
 class DefaultLayout extends React.Component {
   constructor(props) {
     super(props)
@@ -24,7 +30,7 @@ class DefaultLayout extends React.Component {
     let location = this.props.location.pathname.replace(/^\/|\/$/g, '');
     // so many hacks... direct path to blog not working
     if (location == 'blog') {
-      window.location.href = '/';
+      refreshToMain()
     }
   }
 
@@ -72,8 +78,9 @@ class DefaultLayout extends React.Component {
   }
 
   handleCloseArticle() {
-    if (this.props.location.pathname !== '/')
-      window.location.href = '/';
+    if (this.props.location.pathname !== '/') {
+      refreshToMain()
+    }
     
     this.setState({
       articleTimeout: !this.state.articleTimeout

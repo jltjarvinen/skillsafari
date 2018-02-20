@@ -50,19 +50,3 @@ Main.propTypes = {
 }
 
 export default Main
-
-export const pageQuery = graphql`
-  query mainPostPageQuery {
-    allWordpressPost(sort: { fields: [date], order: DESC }) {
-      edges {
-        node {
-          title
-          content
-          slug
-          type
-          ...PostIcons
-        }
-      }
-    }
-  }
-`
