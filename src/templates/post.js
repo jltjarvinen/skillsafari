@@ -1,7 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import PostIcons from "../components/PostIcons"
-import Img from "gatsby-image"
 
 import { rhythm } from "../utils/typography"
 
@@ -11,10 +10,9 @@ class PostTemplate extends Component {
 
     return (
       <div>
-        <h1 dangerouslySetInnerHTML={{ __html: post.title }} />
+        <h3 dangerouslySetInnerHTML={{ __html: post.title }} css={{ textDecoration: `none` }}/>
+        <div dangerouslySetInnerHTML={{ __html: post.content }} />
         <PostIcons node={post} css={{ marginBottom: rhythm(1 / 2) }} />
-        <div dangerouslySetInnerHTML={{ __html: post.content }} />
-        <div dangerouslySetInnerHTML={{ __html: post.content }} />
       </div>
     )
   }

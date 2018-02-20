@@ -2,26 +2,6 @@ const _ = require(`lodash`)
 const Promise = require(`bluebird`)
 const path = require(`path`)
 const slash = require(`slash`)
-// const asyncWait = require("asyncwait")
-
-// exports.onCreateNode = ({ node, getNode }) => {
-//   if (node.internal.type === `MarkdownRemark`) {
-//     const fileNode = getNode(node.parent)
-//     console.log(`\n`, fileNode.relativePath)
-//   }
-// };
-
-// console.log("server")
-// var wait = asyncWait(function() {
-//   console.log("waiting over");
-//   setTimeout(wait(function() {
-//     console.log("my timeout");
-//   }), 5000);
-// });
-
-// setTimeout(wait(function() {
-//   console.log("my timeout");
-// }), 5000);
 
 // Implement the Gatsby API “createPages”. This is
 // called after the Gatsby bootstrap is finished so you have
@@ -45,9 +25,15 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
             edges {
               node {
                 id
+                title
+                content
                 slug
+                link
+                type
                 status
                 template
+                wordpress_parent
+                date(formatString: "MMMM DD, YYYY")
               }
             }
           }
@@ -74,7 +60,7 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
             // as a template component. The `context` is
             // optional but is often necessary so the template
             // can query data specific to each page.
-            path: `/${edge.node.slug}/`,
+            path: edge.node.slug,
             component: slash(pageTemplate),
             context: {
               id: edge.node.id,
@@ -97,6 +83,17 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
                     status
                     template
                     format
+                    title
+                    excerpt
+                    content
+                    type
+                    date(formatString: "MMMM DD, YYYY")
+                    tags {
+                      name
+                    }
+                    categories {
+                      name
+                    }
                   }
                 }
               }
@@ -113,7 +110,7 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
           // The Post ID is prefixed with 'POST_'
           _.each(result.data.allWordpressPost.edges, edge => {
             createPage({
-              path: edge.node.slug,
+              path: "blog/" + edge.node.slug,
               component: slash(postTemplate),
               context: {
                 id: edge.node.id,

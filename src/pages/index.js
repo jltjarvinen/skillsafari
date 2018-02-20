@@ -1,13 +1,73 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import Link from "gatsby-link"
-import ClockIcon from "react-icons/lib/fa/clock-o"
-import TagIcon from "react-icons/lib/fa/tag"
-import OpenIcon from "react-icons/lib/fa/folder-open"
+// import ClockIcon from "react-icons/lib/fa/clock-o"
+// import TagIcon from "react-icons/lib/fa/tag"
+// import OpenIcon from "react-icons/lib/fa/folder-open"
 
 import PostIcons from "../components/PostIcons"
 
 import { rhythm } from "../utils/typography"
+
+const inEffect = `
+  @keyframes react-fade-in {
+    0%   { opacity: 0; }
+    50%  { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+`;
+
+const Content = (props) => (
+  <div>
+    {console.log(props.content)}
+    <style children={inEffect} />
+    <div style={{
+      animationDuration: '0.5s',
+      animationIterationCount: 1,
+      animationName: 'react-fade-in',
+      animationTimingFunction: 'ease-in'
+      }}>
+      <div dangerouslySetInnerHTML={{ __html: props.content }} />
+    </div>
+  </div>
+)
+
+class PostContent extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      expanded: false
+    }
+    this.expandedText = this.expandedText.bind(this)
+  }
+
+  expandedText() {
+    this.setState({
+      expanded: true
+    });       
+  }
+
+  excerpt() {
+    return (
+      <div>
+        <div css={{ marginTop: rhythm(0), marginBottom: rhythm(-3/2) }} dangerouslySetInnerHTML={{ __html: this.props.node.excerpt }} />
+        <div css={{ marginTop: rhythm(0), marginBottom: rhythm(1) }}><a onClick={this.expandedText}>Read more</a></div>
+      </div>
+    )
+  }
+
+  render() {
+    return (
+      <div>
+      { 
+        (this.state.expanded) ? 
+          <Content content={this.props.node.content}/> :
+          this.excerpt() 
+      }
+      </div>
+    );
+  }
+}
 
 class Home extends Component {
   render() {
@@ -15,35 +75,14 @@ class Home extends Component {
 
     return (
       <div>
-        {/* <div css={{ marginBottom: rhythm(1) }}>
-          <h1>Pages</h1>
-          {data.allWordpressPage.edges.map(({ node }) => (
-            <div key={node.slug}>
-              <Link to={node.slug} css={{ textDecoration: `none` }}>
-                <h3>{node.title}</h3>
-              </Link>
-              <div dangerouslySetInnerHTML={{ __html: node.excerpt }} />
-              <span>
-                <ClockIcon
-                  size={14}
-                  css={{ position: `relative`, bottom: 1 }}
-                />
-                {` `}
-                {node.date}
-              </span>
-            </div>
-          ))}
-        </div> */}
-        {/* <hr />
-        <h1>Posts</h1> */}
         {data.allWordpressPost.edges.map(({ node }, i) => (
-          <div css={{ marginBottom: rhythm(2) }} key={node.slug}>
-            {(i > 0) ? <hr /> : null}
-            <Link to={node.slug} css={{ textDecoration: `none` }}>
+          <div css={{ marginTop: rhythm(0), marginBottom: rhythm(0) }} key={node.slug}>
+            {(i > 0) ? <hr css={{ marginTop: rhythm(1 / 2), marginBottom: rhythm(1 / 2) }} /> : null}
+            <Link to={"blog/" + node.slug} css={{ textDecoration: `none` }}>
               <h3>{node.title}</h3>
             </Link>
-            <div dangerouslySetInnerHTML={{ __html: node.content }} />
-            <PostIcons node={node} />
+            <PostContent node={node} />
+            <PostIcons node={node} css={{ marginBottom: rhythm(1 / 2) }} />
           </div>
         ))}
       </div>
@@ -60,21 +99,11 @@ export const pageQuery = graphql`
       edges {
         node {
           title
+          excerpt
           content
           slug
+          type
           ...PostIcons
-        }
-      }
-    },
-    allWordpressPage {
-      edges {
-        node {
-          id
-          title
-          excerpt
-          slug
-          link
-          date(formatString: "MMMM DD, YYYY")
         }
       }
     }

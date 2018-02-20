@@ -1,12 +1,6 @@
 import React from 'react'
 import '../assets/scss/main.scss'
-import Helmet from 'react-helmet'
-
 import PropTypes from "prop-types"
-// import Link from "gatsby-link"
-
-// import { rhythm, scale } from "../utils/typography"
-
 
 import Header from '../components/Header'
 import Main from '../components/Main'
@@ -26,7 +20,21 @@ class DefaultLayout extends React.Component {
     this.handleCloseArticle = this.handleCloseArticle.bind(this)
   }
 
+  componentWillMount() {
+    let location = this.props.location.pathname.replace(/^\/|\/$/g, '');
+    // so many hacks... direct path to blog not working
+    if (location == 'blog') {
+      window.location.href = '/';
+    }
+  }
+
   componentDidMount () {
+    // remove preceding and trailing '/', not fool proof
+    let location = this.props.location.pathname.replace(/^\/|\/$/g, '');
+
+    if (location !== '') {
+      this.handleOpenArticle(location)
+    }
     this.timeoutId = setTimeout(() => {
         this.setState({loading: ''});
     }, 100);
@@ -39,10 +47,10 @@ class DefaultLayout extends React.Component {
   }
 
   handleOpenArticle(article) {
-    console.log("open ", article)
 
-    if (article === 'intro') {
-      console.log("opened intro")
+    let blog = "blog/"
+    if (article.match(blog)) {
+      article = 'blog'
     }
 
     this.setState({
@@ -61,11 +69,12 @@ class DefaultLayout extends React.Component {
         articleTimeout: !this.state.articleTimeout
       })
     }, 350)
-
   }
 
   handleCloseArticle() {
-
+    if (this.props.location.pathname !== '/')
+      window.location.href = '/';
+    
     this.setState({
       articleTimeout: !this.state.articleTimeout
     })
@@ -82,21 +91,14 @@ class DefaultLayout extends React.Component {
         article: ''
       })
     }, 350)
-
   }
 
   render() {
     const siteTitle = this.props.data.site.siteMetadata.title
     const siteDescription = this.props.data.site.siteMetadata.description
-    // console.log(siteTitle, "\n", siteDescription)
 
     return (
       <div className={`body ${this.state.loading} ${this.state.isArticleVisible ? 'is-article-visible' : ''}`}>
-        <Helmet>
-            <title>{siteTitle}</title>
-            <meta name="description" content={siteDescription} />
-        </Helmet>
-
         <div id="wrapper">
 
           <Header 
@@ -141,6 +143,7 @@ export const pageQuery = graphql`
           content
           slug
           link
+          type
           wordpress_parent
           date(formatString: "MMMM DD, YYYY")
         }
