@@ -9,11 +9,7 @@ class Main extends React.Component {
       (this.props.article === node.slug && this.props.articleTimeout === true) ?
         <article key={node.id} id={node.slug} className={`${this.props.article === node.slug ? 'active' : ''} ${this.props.articleTimeout ? 'timeout' : ''}`} style={{display:'none'}}>
           <h2 className="major">{node.title}</h2>
-          {
-            (node.slug === 'blog') ? 
-              <div>{this.props.pageChildren()}</div> :
-              <div key={node.id} dangerouslySetInnerHTML={{ __html: node.content }} />
-          }
+          <div key={node.id} dangerouslySetInnerHTML={{ __html: node.content }} />
           {close}
         </article> 
       : null

@@ -20,6 +20,7 @@ const Header = (props) => (
         </div>
         <nav>
             <ul>
+                <li><a href="/blogi/" >blog</a></li>
                 {
                     props.allWordpressPage.edges.map(({ node }, i) => (
                         (node.wordpress_parent !== 0) ?

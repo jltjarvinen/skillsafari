@@ -15,10 +15,10 @@ const Socials = props => {
 
   return (
     <div>
-      <a href={facebook} target="_blank"><FaFacebook style={{margin: 5}} size={iconsize}/></a>
-      <a href={twitter} target="_blank"><FaTwitter style={{margin: 5}} size={iconsize}/></a>
-      <a href={linkedin} target="_blank"><FaLinkedIn style={{margin: 5}} size={iconsize}/></a>
-      <a href={mailto}><FaEnvelope style={{margin: 5}} size={iconsize}/></a>
+      <a style={{borderBottom: 'none'}} href={facebook} target="_blank"><FaFacebook style={{margin: 5}} size={iconsize}/></a>
+      <a style={{borderBottom: 'none'}} href={twitter} target="_blank"><FaTwitter style={{margin: 5}} size={iconsize}/></a>
+      <a style={{borderBottom: 'none'}} href={linkedin} target="_blank"><FaLinkedIn style={{margin: 5}} size={iconsize}/></a>
+      <a style={{borderBottom: 'none'}} href={mailto}><FaEnvelope style={{margin: 5}} size={iconsize}/></a>
     </div>
   )
 }

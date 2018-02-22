@@ -26,14 +26,6 @@ class DefaultLayout extends React.Component {
     this.handleCloseArticle = this.handleCloseArticle.bind(this)
   }
 
-  componentWillMount() {
-    let location = this.props.location.pathname.replace(/^\/|\/$/g, '');
-    // so many hacks... direct path to blog not working
-    if (location == 'blog') {
-      refreshToMain()
-    }
-  }
-
   componentDidMount () {
     // remove preceding and trailing '/', not fool proof
     let location = this.props.location.pathname.replace(/^\/|\/$/g, '');
@@ -53,11 +45,6 @@ class DefaultLayout extends React.Component {
   }
 
   handleOpenArticle(article) {
-
-    let blog = "blog/"
-    if (article.match(blog)) {
-      article = 'blog'
-    }
 
     this.setState({
       isArticleVisible: !this.state.isArticleVisible,
@@ -100,8 +87,7 @@ class DefaultLayout extends React.Component {
     }, 350)
   }
 
-  render() {
-
+  mainPage() {
     return (
       <div className={`body ${this.state.loading} ${this.state.isArticleVisible ? 'is-article-visible' : ''}`}>
         <div id="wrapper">
@@ -126,6 +112,30 @@ class DefaultLayout extends React.Component {
         </div>
         <div id="bg"></div>
       </div>
+    )
+  }
+  otherPage() {
+    return (
+      <div className={'body is-article-visible'}>
+        <div id="wrapper">
+          <div id="main" style={{display: 'flex'}}>
+            <article className={'active timeout'} style={{display:'none'}}>
+              {this.props.children()}
+              <a className="close" style={{borderBottom: 'none'}} href="/"></a>
+            </article>
+          </div>
+        </div>
+        <div id="bg"></div>
+      </div>
+    )
+  }
+
+  render() {
+    let location = this.props.location.pathname.replace(/^\/|\/$/g, '');
+
+    return (
+      (location !== 'blogi') ?
+        this.mainPage() : this.otherPage()
     )
   }
 }
