@@ -2,7 +2,9 @@ module.exports = {
   siteMetadata: {
     title: `SkillSafari`,
     subtitle: `for better education`,
-    description: "Quality education and learning"
+    description: "Quality education and learning",
+    front: "hestia-front",
+    blog: "blog"
   },
   plugins: [
     // https://public-api.wordpress.com/wp/v2/sites/gatsbyjsexamplewordpress.wordpress.com/pages/
@@ -37,6 +39,24 @@ module.exports = {
         path: `${__dirname}/src/images`,
       },
     },
+    {
+      resolve: `gatsby-plugin-favicon`,
+      options: {
+        logo: "./src/images/favicon.png",
+        injectHTML: true,
+        icons: {
+          android: true,
+          appleIcon: true,
+          appleStartup: true,
+          coast: false,
+          favicons: true,
+          firefox: true,
+          twitter: false,
+          yandex: false,
+          windows: false
+        }
+      }
+    },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
     // `gatsby-plugin-react-helmet`,
@@ -47,10 +67,6 @@ module.exports = {
       options: {
         pathToConfigModule: `src/utils/typography.js`,
       },
-    },
-    {
-      resolve: `gatsby-plugin-create-client-paths`,
-      options: { prefixes: [`/blogi/*`] },
-    },
+    }
   ],
 }

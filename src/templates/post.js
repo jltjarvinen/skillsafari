@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { request } from 'graphql-request'
-import { rhythm } from "../../utils/typography"
+import { rhythm } from "../utils/typography"
 import FaEnvelope from 'react-icons/lib/fa/envelope'
+import FaAngleDown from 'react-icons/lib/fa/angle-down'
+import moment from 'moment'
 
 const inEffect = `
   @keyframes react-fade-in {
@@ -44,7 +46,11 @@ class PostContent extends Component {
     return (
       <div>
         <div css={{ marginTop: rhythm(0), marginBottom: rhythm(-3/2) }} dangerouslySetInnerHTML={{ __html: this.props.node.excerpt }} />
-        <div css={{ marginTop: rhythm(0), marginBottom: rhythm(1) }}><a onClick={this.expandedText}>Read more</a></div>
+        <div style={{textAlign: 'center'}} css={{ marginTop: rhythm(0), marginBottom: rhythm(1) }}>
+          <a style={{borderBottom: 'none'}} onClick={this.expandedText}>
+            <FaAngleDown style={{textAlign: 'center'}} size={32}/>
+          </a>
+        </div>
       </div>
     )
   }
@@ -53,13 +59,13 @@ class PostContent extends Component {
     return (
       <div>
         <h3>{this.props.node.title}</h3>
-        <p style={{textAlign: 'left'}}>
-          <a href={'mailto:' + this.props.node.author.email}><FaEnvelope style={{margin: 5}} size={16}/></a>
+        <div style={{textAlign: 'left'}}>
+          <a style={{borderBottom: 'none'}} href={'mailto:' + this.props.node.author.email}><FaEnvelope style={{margin: 5}} size={16}/></a>
           <b>{this.props.node.author.name}</b>
           <span style={{float: 'right'}}>
-            {this.props.node.date}
+            {moment(this.props.node.date).format("ll")}
           </span>
-        </p>
+        </div>
         {
           (this.state.expanded) ? 
             <Content content={this.props.node.content}/> :
@@ -70,61 +76,4 @@ class PostContent extends Component {
   }
 }
 
-
-class SecondPage extends Component {
-
-  constructor() {
-    super();
-    this.state = {
-      posts: null
-    };
-  }
-
-  getData() {
-    const query = `{
-      posts {
-        edges {
-          node {
-            author {
-              avatar {
-                url
-              }
-              name
-              email
-            }
-            title
-            content
-            excerpt
-            date
-          }
-        }
-      }
-    }`
-
-    request('https://blog.skillsafari.io/graphql', query)
-    .then(json => {
-      this.setState({
-        posts: json.posts
-      })
-    })
-  }
-
-  componentWillMount () {
-    this.getData()
-  }
-
-  render() {
-    return (
-      <div>
-        {
-          (this.state.posts === null) ? null :
-          this.state.posts.edges.map(({node}, i) => (
-            <PostContent key={i} node={node}/>
-          ))
-        }
-      </div>
-    );
-  }
-}
-
-export default SecondPage
+export default PostContent

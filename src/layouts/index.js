@@ -6,11 +6,7 @@ import Header from '../components/Header'
 import Main from '../components/Main'
 import Footer from '../components/Footer'
 
-const refreshToMain = () => {
-  if (typeof window !== 'undefined') {
-    window.location.href = '/';
-  }
-}
+import { request } from 'graphql-request'
 
 class DefaultLayout extends React.Component {
   constructor(props) {
@@ -20,13 +16,52 @@ class DefaultLayout extends React.Component {
       timeout: false,
       articleTimeout: false,
       article: '',
-      loading: 'is-loading'
+      loading: 'is-loading',
+      posts: null,
+      front: this.getFrontPage()
     }
     this.handleOpenArticle = this.handleOpenArticle.bind(this)
     this.handleCloseArticle = this.handleCloseArticle.bind(this)
   }
 
+  getFrontPage () {
+    let front = null
+    this.props.data.allWordpressPage.edges.map(({ node }, i) => (
+        (node.slug === this.props.data.site.siteMetadata.front) ?
+            front = node : null
+    ))
+    return front
+  }
+
   componentDidMount () {
+    const post_query = `{
+      posts {
+        edges {
+          node {
+            author {
+              avatar {
+                url
+              }
+              name
+              email
+            }
+            title
+            content
+            excerpt
+            date
+          }
+        }
+      }
+    }`
+
+    request('https://blog.skillsafari.io/graphql', post_query)
+    .then(json => {
+      // console.log("###### fetching data ######")
+      this.setState({
+        posts: json.posts
+      })
+    })
+
     // remove preceding and trailing '/', not fool proof
     let location = this.props.location.pathname.replace(/^\/|\/$/g, '');
 
@@ -65,9 +100,6 @@ class DefaultLayout extends React.Component {
   }
 
   handleCloseArticle() {
-    if (this.props.location.pathname !== '/') {
-      refreshToMain()
-    }
     
     this.setState({
       articleTimeout: !this.state.articleTimeout
@@ -97,6 +129,7 @@ class DefaultLayout extends React.Component {
             timeout={this.state.timeout}
             allWordpressPage={this.props.data.allWordpressPage}
             siteMetadata={this.props.data.site.siteMetadata}
+            front={this.state.front}
           />
           <Main
             isArticleVisible={this.state.isArticleVisible}
@@ -106,6 +139,9 @@ class DefaultLayout extends React.Component {
             onCloseArticle={this.handleCloseArticle}
             pageChildren={this.props.children}
             allWordpressPage={this.props.data.allWordpressPage}
+            siteMetadata={this.props.data.site.siteMetadata}
+            blog={this.state.posts}
+            front={this.state.front}
           />
           <Footer timeout={this.state.timeout} />
 
@@ -148,6 +184,8 @@ export const pageQuery = graphql`
       siteMetadata {
         title
         description
+        front
+        blog
       }
     },
     allWordpressPage {
@@ -160,6 +198,7 @@ export const pageQuery = graphql`
           link
           type
           wordpress_parent
+          wordpress_id
           date(formatString: "MMMM DD, YYYY")
         }
       }
